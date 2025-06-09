@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: eventtracker
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn eventtracker.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: eventtracker.settings
+      - key: PYTHON_VERSION
+        value: 3.10
