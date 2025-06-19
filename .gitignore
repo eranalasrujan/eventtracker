@@ -1,19 +1,12 @@
-# Python
+# Python and Django
 __pycache__/
-*.py[cod]
-*.sqlite3
-*.log
-
-# Virtual Environment
-venv/
-
-# Django
-db.sqlite3
-*.pot
 *.pyc
+env/
+venv/
+db.sqlite3
+/staticfiles/
+.DS_Store
 
-# VSCode
-.vscode/
-
-# Environment files
-.env
+# IDEs and editors
+*.vscode/
+.idea/

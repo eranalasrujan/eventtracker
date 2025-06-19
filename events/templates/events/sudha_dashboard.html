@@ -1,0 +1,22 @@
+<!-- C:\Users\91912\Documents\eventtracker\events\templates\events\sudha_dashboard.html -->
+
+{% extends 'base.html' %}
+{% block title %}Sudha's Dashboard{% endblock %}
+{% block content %}
+  <h2>CH. Sudha's Dashboard</h2>
+  {% for day in grid %}
+    <h3>{{ day.day }}</h3>
+    {% for s in day.slots %}
+      <strong>{{ s.slot }}</strong>
+      {% if s.missed %}
+        <ul>
+          {% for stu in s.missed %}
+            <li>{{ stu }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No absentees</p>
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+{% endblock %}

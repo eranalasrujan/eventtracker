@@ -1,0 +1,4 @@
+body { font-family: sans-serif; margin: 1em; }
+header { margin-bottom: 1em; }
+.messages { color: green; }
+main { background: #fff; padding: 1em; border-radius: 4px; }

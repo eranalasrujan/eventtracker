@@ -1,45 +1,41 @@
-from django.shortcuts import render, redirect
+# C:\Users\91912\Documents\eventtracker\events\views.py
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import TimetableSlot, MissedClass, Event
 from .forms import EventForm
-from .models import Event
-from django.shortcuts import get_object_or_404
 
-def home(request):
-    events = Event.objects.all()
-    return render(request, 'events/home.html', {'events': events})
+def event_list(request):
+    events = Event.objects.all().order_by('start')
+    return render(request, 'events/event_list.html', {'events': events})
 
-def add_event(request):
-    if request.method == 'POST':
+@login_required
+def sudha_dashboard(request):
+    if request.user.username!='sudha':
+        return redirect('event_list')
+    days = ['Mon','Tue','Wed','Thu','Fri','Sat']
+    grid = []
+    for d in days:
+        slots = TimetableSlot.objects.filter(faculty=request.user, day=d).order_by('start')
+        row = []
+        for s in slots:
+            missed = MissedClass.objects.filter(slot=s).values_list('student__username', flat=True)
+            row.append({
+                'slot': f"{s.start.strftime('%H:%M')}–{s.end.strftime('%H:%M')}",
+                'missed': list(missed)
+            })
+        grid.append({'day': d, 'slots': row})
+    return render(request, 'events/sudha_dashboard.html', {'grid': grid})
+
+@login_required
+def event_create(request):
+    if request.user.role not in ['admin','faculty']:
+        return redirect('event_list')
+    if request.method=='POST':
         form = EventForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('home')
+            ev = form.save()
+            return redirect('event_list')
     else:
         form = EventForm()
     return render(request, 'events/add_event.html', {'form': form})
-
-
-def edit_event(request, event_id):
-    event = Event.objects.get(pk=event_id)
-    if request.method == 'POST':
-        form = EventForm(request.POST, instance=event)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = EventForm(instance=event)
-    return render(request, 'events/edit_event.html', {'form': form})
-
-
-def delete_event(request, event_id):
-    event = Event.objects.get(pk=event_id)
-    event.delete()
-    return redirect('home')
-
-
-
-def delete_event(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    if request.method == 'POST':
-        event.delete()
-        return redirect('home')
-    return render(request, 'events/delete_event.html', {'event': event})

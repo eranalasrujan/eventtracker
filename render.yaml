@@ -1,11 +1,21 @@
+databases:
+  - name: eventdb
+    plan: free
+    databaseName: eventtracker
+    user: eventtracker
 services:
   - type: web
     name: eventtracker
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn eventtracker.wsgi:application"
+    plan: free
+    runtime: python
+    buildCommand: './build.sh'
+    startCommand: 'python -m gunicorn eventsystem.wsgi --log-file -'
     envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: eventtracker.settings
-      - key: PYTHON_VERSION
-        value: 3.10
+      - key: DATABASE_URL
+        fromDatabase:
+          name: eventdb
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4

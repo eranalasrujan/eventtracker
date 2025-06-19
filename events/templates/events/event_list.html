@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}All Events{% endblock %}
+
+{% block content %}
+<h2>Upcoming Events</h2>
+
+{% if user.role in 'admin,faculty' %}
+  <p><a href="{% url 'event_create' %}">+ Create Event</a></p>
+{% endif %}
+
+<ul>
+  {% for ev in events %}
+    <li>
+      <a href="{% url 'event_detail' ev.id %}">{{ ev.title }}</a>
+      ({{ ev.start }} – {{ ev.end }})
+    </li>
+  {% empty %}
+    <li>No events found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

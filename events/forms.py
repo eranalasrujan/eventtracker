@@ -3,5 +3,14 @@ from .models import Event
 
 class EventForm(forms.ModelForm):
     class Meta:
-        model = Event
-        fields = ['title', 'date', 'location']
+        model  = Event
+        fields = [
+            'title',
+            'start',
+            'end',
+            'participants',
+        ]
+        widgets = {
+            'start': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'end':   forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
