@@ -1,0 +1,80 @@
+/* eventtracker/events/static/core/css/style.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e9ecef;
+    margin: 0;
+    padding: 0;
+    color: #343a40;
+}
+
+/* Navbar styling is mostly handled by Bootstrap, but custom adjustments can go here */
+.navbar-brand {
+    font-weight: bold;
+}
+
+.container {
+    /* Bootstrap's container class is already responsive, these are general adjustments */
+    padding: 15px;
+}
+
+/* Card styling for forms/details */
+.card {
+    border: none;
+    border-radius: 0.5rem;
+    overflow: hidden; /* Ensures rounded corners apply to header/body */
+}
+
+.card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+/* Form field styling (mostly handled by Bootstrap's form-control) */
+.form-text {
+    font-size: 0.875em;
+    color: #6c757d;
+}
+
+/* Messages styling (using Bootstrap alerts) */
+.alert {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+}
+
+/* Specific alert styles (from MESSAGE_TAGS in settings.py) */
+.alert-info { background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
+.alert-success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+.alert-warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
+.alert-danger { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+
+/* General link styling */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* List group adjustments */
+.list-group-item {
+    border-color: rgba(0,0,0,.125);
+}
+
+/* Table adjustments */
+.table th,.table td {
+    vertical-align: middle;
+}
+
+/* Icons for active/staff status */
+.fas {
+    margin-right: 5px;
+}
+
+/* Specific styling for notifications */
+.list-group-item-info {
+    background-color: #e0f7fa; /* Lighter blue for new notifications */
+    border-left: 5px solid #007bff; /* Highlight new notifications */
+}

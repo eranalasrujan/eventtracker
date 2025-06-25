@@ -1,0 +1,81 @@
+{# eventtracker/events/templates/events/student_dashboard.html #}
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4 text-primary">Welcome, {{ user.username }}!</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">My Upcoming Events</h4>
+                </div>
+                <div class="card-body">
+                    {% if my_upcoming_events %}
+                        <ul class="list-group">
+                            {% for event in my_upcoming_events %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'events:event_detail' event.pk %}">{{ event.title }}</a>
+                                    <br><small class="text-muted">{{ event.start_time|date:"F j, Y, P" }} - {{ event.end_time|date:"P" }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-secondary" role="alert">
+                            No upcoming events you are attending.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">My Organized Events (External)</h4>
+                </div>
+                <div class="card-body">
+                    {% if my_organized_events %}
+                        <ul class="list-group">
+                            {% for event in my_organized_events %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'events:event_detail' event.pk %}">{{ event.title }}</a>
+                                    <br><small class="text-muted">{{ event.start_time|date:"F j, Y, P" }} - {{ event.end_time|date:"P" }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-secondary" role="alert">
+                            No events organized by you.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">My Past Events</h4>
+                </div>
+                <div class="card-body">
+                    {% if my_past_events %}
+                        <ul class="list-group">
+                            {% for event in my_past_events %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'events:event_detail' event.pk %}">{{ event.title }}</a>
+                                    <br><small class="text-muted">{{ event.start_time|date:"F j, Y, P" }} - {{ event.end_time|date:"P" }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-secondary" role="alert">
+                            No past events found.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

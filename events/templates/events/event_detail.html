@@ -1,25 +1,30 @@
 {% extends 'base.html' %}
-{% block title %}{{ event.title }}{% endblock %}
+{% block title %}Event Details{% endblock %}
 {% block content %}
-<h2>{{ event.title }}</h2>
-<p><strong>When:</strong> {{ event.start_time }} – {{ event.end_time }}</p>
-<p><strong>Where:</strong> {{ event.location }}</p>
+  <h2>{{ event.name }}</h2>
+  <p><strong>Date:</strong> {{ event.start_time }} – {{ event.end_time }}</p>
+  <p><strong>Location:</strong> {{ event.location }}</p>
 
-{% if user.role == 'student' %}
-  {% if user in event.attendees.all %}
-    <p>You’re registered ✅</p>
-  {% else %}
-    <form method="post" action="{% url 'event_register' event.id %}">
-      {% csrf_token %}
-      <button type="submit">Register</button>
-    </form>
+  {% if user.is_authenticated %}
+    {% if user.role == 'student' %}
+      {% if user in event.attendees.all %}
+        <div class="alert alert-success">You are registered.</div>
+      {% else %}
+        <form method="post">
+          {% csrf_token %}
+          <button class="btn btn-primary">Register for Event</button>
+        </form>
+      {% endif %}
+    {% endif %}
+
+    {% if user.role in ['admin','faculty'] %}
+      <div class="mt-3">
+        <a href="{% url 'event_edit' event.id %}" class="btn btn-warning">Edit</a>
+        <form action="{% url 'event_delete' event.id %}" method="post" class="d-inline">
+          {% csrf_token %}
+          <button class="btn btn-danger" onclick="return confirm('Delete this event?');">Delete</button>
+        </form>
+      </div>
+    {% endif %}
   {% endif %}
-{% endif %}
-
-{% if user.role in 'admin,faculty' %}
-  <p>
-    <a href="{% url 'event_edit' event.id %}">Edit</a> |
-    <a href="{% url 'event_delete' event.id %}">Delete</a>
-  </p>
-{% endif %}
 {% endblock %}

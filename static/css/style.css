@@ -1,4 +1,12 @@
-body { font-family: sans-serif; margin: 1em; }
-header { margin-bottom: 1em; }
-.messages { color: green; }
-main { background: #fff; padding: 1em; border-radius: 4px; }
+/* Custom styles - blue theme accents */
+body {
+    background-color: #f0f8ff; /* Alice blue background */
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.bg-primary {
+    background-color: #0056b3 !important; /* Darker blue navbar */
+}

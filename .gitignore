@@ -1,12 +1,17 @@
-# Python and Django
+# Python artifacts
 __pycache__/
 *.pyc
+
+# Virtualenv
 env/
 venv/
-db.sqlite3
-/staticfiles/
-.DS_Store
+.env
 
-# IDEs and editors
-*.vscode/
+# Django
+*.sqlite3
+/media/
+staticfiles/
+
+# IDEs
+.vscode/
 .idea/

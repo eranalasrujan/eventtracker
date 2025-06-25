@@ -1,127 +1,44 @@
 {% extends 'base.html' %}
-
-{% block title %}Faculty Dashboard{% endblock %}
+{% block title %}Faculty Dashboard – {{ selected_day }}{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h1 class="card-title mb-0">Faculty Dashboard for {{ request.user.get_full_name|default:request.user.username }}</h1>
-        </div>
-        <div class="card-body">
-            {% if messages %}
-                <ul class="messages list-unstyled">
-                    {% for message in messages %}
-                        <li {% if message.tags %} class="{{ message.tags }} alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+<div class="container mt-4">
+  <h2>Faculty Dashboard: {{ selected_day }}</h2>
 
-            <h3 class="mb-3">My Organized Events</h3>
-            {% if organized_events %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Title</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th>Location</th>
-                                <th>Attendees</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for event in organized_events %}
-                            <tr>
-                                <td><a href="{% url 'events:event_detail' event.pk %}">{{ event.title }}</a></td>
-                                <td>{{ event.start_time|date:"Y-m-d H:i" }}</td>
-                                <td>{{ event.end_time|date:"Y-m-d H:i" }}</td>
-                                <td>{{ event.location|default:"-" }}</td>
-                                <td>{{ event.total_attendees_count }}</td>
-                                <td><a href="{% url 'events:event_detail' event.pk %}" class="btn btn-sm btn-info">View</a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <p>You have not organized any events yet.</p>
-            {% endif %}
+  <!-- Date navigation badges -->
+  <nav class="mb-4">
+    {% for nav in nav_dates %}
+      {% if nav.selected %}
+        <span class="badge bg-primary">{{ nav.label }}</span>
+      {% else %}
+        <a href="{% url 'events:faculty_dashboard_day' nav.url %}"
+           class="badge bg-secondary">{{ nav.label }}</a>
+      {% endif %}
+    {% endfor %}
+  </nav>
 
-            <h3 class="mt-4 mb-3">Daily Schedule by Hours</h3>
-            <div class="d-flex mb-3">
-                {% for day_info in days_of_week %}
-                    <a href="{% url 'events:faculty_dashboard_by_day' day=day_info.date_str %}"
-                       class="btn {% if selected_day == day_info.date_str %}btn-primary{% else %}btn-outline-primary{% endif %} me-2">
-                        {{ day_info.day_abbr }}
-                    </a>
-                {% endfor %}
-            </div>
-
-            <h4>{{ selected_day_full }} Schedule for Today ({{ today_date|date:"F j, Y" }})</h4>
-            {% if hourly_schedule %}
-                <ul class="list-group">
-                    {% for hour_slot, events_in_hour in hourly_schedule.items %}
-                        <li class="list-group-item">
-                            <strong>{{ hour_slot }}:</strong>
-                            {% if events_in_hour %}
-                                <ul>
-                                {% for event in events_in_hour %}
-                                    <li>
-                                        {{ event.title }} ({{ event.start_time|date:"P" }} - {{ event.end_time|date:"P" }}) at {{ event.location|default:"N/A" }}
-                                        {% if event.is_current_slot %}
-                                            <span class="badge bg-success ms-2">Current</span>
-                                        {% elif event.is_upcoming_slot %}
-                                            <span class="badge bg-info ms-2">Upcoming</span>
-                                        {% endif %}
-                                    </li>
-                                {% endfor %}
-                                </ul>
-                            {% else %}
-                                No events planned.
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No schedule available for {{ selected_day_full }}.</p>
-            {% endif %}
-
-            <h3 class="mt-4 mb-3">Students Impacted by Events</h3>
-            {% if impacted_students %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Student Name</th>
-                                <th>Event Impacted By</th>
-                                <th>Event Time</th>
-                                <th>Student's Schedule Conflict</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for student_impact in impacted_students %}
-                            <tr>
-                                <td>{{ student_impact.student.get_full_name|default:student_impact.student.username }}</td>
-                                <td><a href="{% url 'events:event_detail' student_impact.event.pk %}">{{ student_impact.event.title }}</a></td>
-                                <td>{{ student_impact.event.start_time|date:"F j, Y, P" }} - {{ student_impact.event.end_time|date:"P" }}</td>
-                                <td>{{ student_impact.conflict_details|default:"N/A" }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <p>No students are currently impacted by event conflicts.</p>
-            {% endif %}
-
-            {% if request.user.role == 'admin' or request.user.role == 'faculty' %}
-            <div class="mt-4">
-                <a href="{% url 'events:event_create' %}" class="btn btn-success">Create New Event</a>
-            </div>
-            {% endif %}
-        </div>
+  <!-- Loop over each slot’s “missed” info -->
+  {% for entry in slot_misses %}
+    <div class="card mb-3 shadow-sm">
+      <div class="card-header">
+        {{ entry.slot.start }}–{{ entry.slot.end }}
+        ({{ entry.slot.subject }} – {{ entry.slot.section }})
+      </div>
+      <ul class="list-group list-group-flush">
+        {% if entry.students %}
+          {% for username in entry.students %}
+            <li class="list-group-item">{{ username }}</li>
+          {% endfor %}
+        {% else %}
+          <li class="list-group-item text-muted">
+            No students missed this slot.
+          </li>
+        {% endif %}
+      </ul>
     </div>
+  {% empty %}
+    <p>No classes scheduled for {{ selected_day }}.</p>
+  {% endfor %}
+
 </div>
 {% endblock %}

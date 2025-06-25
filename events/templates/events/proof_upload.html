@@ -1,0 +1,46 @@
+{# eventtracker/events/templates/events/proof_upload.html #}
+{% extends 'base.html' %}
+{% block title %}Upload Proof{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white text-center">
+                <h2 class="mb-0">Upload Proof for an Event</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data"> {# IMPORTANT: enctype="multipart/form-data" for file uploads #}
+                    {% csrf_token %}
+                    {# Render non-field errors if any #}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {# Render all form fields with Bootstrap styling #}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            {{ field.label_tag }}
+                            {{ field|add_class:"form-control" }} {# Add Bootstrap class to inputs #}
+                            {% if field.help_text %}
+                                <div class="form-text">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">Upload Proof</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

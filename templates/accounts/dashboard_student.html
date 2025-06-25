@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<h2>Welcome, {{ user.first_name|default:user.username }}!</h2>
+<p>You are logged in as <strong>Student</strong>.</p>
+<h3>Available Events</h3>
+<ul class="list-group">
+    {% for event in events %}
+        <li class="list-group-item">
+            <a href="{% url 'event_detail' event.id %}">{{ event.title }}</a>
+            - {{ event.start_time|date:"Y-m-d H:i" }}
+        </li>
+    {% empty %}
+        <li class="list-group-item">No events available.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

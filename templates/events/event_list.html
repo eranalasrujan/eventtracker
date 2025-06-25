@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}All Events{% endblock %}
+{% block content %}
+<h2>All Events</h2>
+<ul class="list-group">
+    {% for event in events %}
+        <li class="list-group-item">
+            <a href="{% url 'event_detail' event.id %}">{{ event.title }}</a>
+            - {{ event.start_time|date:"Y-m-d H:i" }}
+        </li>
+    {% empty %}
+        <li class="list-group-item">No events found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

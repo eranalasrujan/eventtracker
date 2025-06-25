@@ -1,0 +1,4 @@
+Django>=5.0,<6.0
+psycopg2-binary
+gunicorn # For production deployment (optional for local dev)
+dj-database-url # For production database configuration (optional for local dev)

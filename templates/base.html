@@ -1,31 +1,72 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>{% block title %}EventTracker{% endblock %}</title>
+
+  {# Custom styles #}
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  {# Bootstrap CSS #}
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-…"
+    crossorigin="anonymous"
+  >
 </head>
-<body>
-  <header>
-    {% if user.is_authenticated %}
-      Hello {{ user.username }} ({{ user.role }}) |
-      <a href="{% url 'logout' %}">Logout</a> |
-      <a href="{% url 'notification_list' %}">Notifications</a>
-    {% else %}
-      <a href="{% url 'login' %}">Login</a> |
-      <a href="{% url 'register' %}">Register</a>
-    {% endif %}
-  </header>
-  <main>
-    {% if messages %}
-      <ul class="messages">
-        {% for msg in messages %}
-          <li>{{ msg }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-    {% block content %}{% endblock %}
-  </main>
+<body class="bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container">
+
+      {# Home link → your dashboard view #}
+      <a class="navbar-brand" href="{% url 'events:dashboard' %}">
+        EventTracker
+      </a>
+
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              {# Show notifications (events app) #}
+              <a class="nav-link" href="{% url 'events:notifications' %}">
+                Notifications
+              </a>
+            </li>
+            <li class="nav-item">
+              {# Logout (accounts app) #}
+              <a class="nav-link" href="{% url 'accounts:logout' %}">
+                Logout
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              {# Login (accounts app) #}
+              <a class="nav-link" href="{% url 'accounts:login' %}">
+                Login
+              </a>
+            </li>
+            <li class="nav-item">
+              {# Register (accounts app) #}
+              <a class="nav-link" href="{% url 'accounts:register' %}">
+                Register
+              </a>
+            </li>
+          {% endif %}
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    {% block content %}
+    {# Page-specific content goes here #}
+    {% endblock %}
+  </div>
+
 </body>
 </html>

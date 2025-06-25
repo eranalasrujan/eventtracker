@@ -1,0 +1,24 @@
+{# eventtracker/events/templates/events/event_confirm_delete.html #}
+{% extends 'base.html' %}
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-6">
+        <div class="card border-danger shadow-sm">
+            <div class="card-header bg-danger text-white text-center">
+                <h3 class="mb-0">Confirm Deletion</h3>
+            </div>
+            <div class="card-body text-center">
+                <p class="card-text">Are you sure you want to delete the event "<strong>{{ event.title }}</strong>"?</p>
+                <p class="card-text text-danger">This action cannot be undone.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger me-2">Yes, Delete</button>
+                    <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
